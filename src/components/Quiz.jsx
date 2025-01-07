@@ -1,37 +1,21 @@
 import { useState, useCallback } from "react";
 import QUESTIONS from "../questions.js";
-import quizCompleteImg from "../assets/quiz-complete.png";
 import Question from "./Question.jsx";
+import Summary from "./Summary.jsx";
 
 export default function Quiz() {
-  const [answerState, setAnswerState] = useState("");
-  const [userAnswers, setUserAnswers] = useState([0]);
+  const [userAnswers, setUserAnswers] = useState([]);
 
-  const activeQuestionIndex =
-    answerState === "" ? userAnswers.length : userAnswers.length - 1;
-
+  const activeQuestionIndex = userAnswers.length;
   const quizIsCoomplete = activeQuestionIndex === QUESTIONS.length;
 
   const handleSelectAnswer = useCallback(
     function handleSelectAnswer(selectedAnswer) {
-      setAnswerState("answered");
       setUserAnswers((prevUserAnswers) => {
         return [...prevUserAnswers, selectedAnswer];
       });
-
-      setTimeout(() => {
-        if (selectedAnswer === QUESTIONS[activeQuestionIndex].answers[0]) {
-          setAnswerState("correct");
-        } else {
-          setAnswerState("wrong");
-        }
-
-        setTimeout(() => {
-          setAnswerState("");
-        }, 2000);
-      }, 1000);
     },
-    [activeQuestionIndex]
+    []
   );
 
   const handleSkipAnswer = useCallback(
@@ -40,12 +24,7 @@ export default function Quiz() {
   );
 
   if (quizIsCoomplete) {
-    return (
-      <div id="summary">
-        <img src={quizCompleteImg} />
-        <h2>Quiz Completed</h2>
-      </div>
-    );
+    return <Summary userAnswers={userAnswers} />
   }
 
   
@@ -53,13 +32,36 @@ export default function Quiz() {
     <div id="quiz">
       <Question
         key={activeQuestionIndex}
-        questionText={QUESTIONS[activeQuestionIndex].text}
-        answers={QUESTIONS[activeQuestionIndex].answers}
-        answerState={answerState}
-        selectedAnswer={userAnswers[userAnswers.length - 1]}
+        index={activeQuestionIndex}
         onSelectAnswer={handleSelectAnswer}
         onSkipAnswer={handleSkipAnswer}
       />
     </div>
   );
 }
+
+// const [answerState, setAnswerState] = useState("");
+
+
+
+
+// setAnswerState("answered");
+
+// setTimeout(() => {
+//   if (selectedAnswer === QUESTIONS[activeQuestionIndex].answers[0]) {
+//     setAnswerState("correct");
+//   } else {
+//     setAnswerState("wrong");
+//   }
+
+//   setTimeout(() => {
+//     setAnswerState("");
+//   }, 2000);
+// }, 1000);
+
+
+
+  // questionText={QUESTIONS[activeQuestionIndex].text}
+        // answers={QUESTIONS[activeQuestionIndex].answers}
+        // answerState={answerState}
+        // selectedAnswer={userAnswers[userAnswers.length - 1]}
